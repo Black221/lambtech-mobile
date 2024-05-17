@@ -4,12 +4,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 export default function FooterChat() {
 	return (
 		<View style={styles.footer}>
-			<TouchableOpacity>
-				<Icon name="smile-o" size={24} color="#000" />
-			</TouchableOpacity>
 			<TextInput style={styles.input} placeholder="Type a message" />
 			<TouchableOpacity>
-				<Icon name="microphone" size={24} color="#000" />
+				<Icon name="microphone" size={28} color="#000" />
 			</TouchableOpacity>
 		</View>
 	);
@@ -27,7 +24,7 @@ const styles = StyleSheet.create({
 		height: 40,
 		borderColor: "#000",
 		borderWidth: 1,
-		borderRadius: 20,
+		borderRadius: 30,
 		padding: 10,
 	},
 });

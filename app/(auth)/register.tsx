@@ -82,7 +82,12 @@ export function CheckboxWithLabel({
 	const id = `checkbox-${size.toString().slice(1)}`;
 	return (
 		<XStack alignItems="center" space="$4">
-			<Checkbox id={id} size={size} {...checkboxProps}>
+			<Checkbox
+				id={id}
+				size={size}
+				{...checkboxProps}
+				style={{ backgroundColor: "#16C59B" }}
+			>
 				<Checkbox.Indicator>
 					<CheckIcon />
 				</Checkbox.Indicator>

@@ -21,7 +21,6 @@ export default function RootLayout() {
 	const [loaded] = useFonts({
 		Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
 		InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
-		CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf')
 	})
 
 

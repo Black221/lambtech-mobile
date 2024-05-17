@@ -5,12 +5,10 @@ export default function Layout () {
 
     return (<>
         <Stack>
-            <Stack.Screen name="stepOne" options={{
+            <Stack.Screen name="home" options={{
                 headerShown: false
             }} />
-            <Stack.Screen name="stepTwo" options={{
-                headerShown: false
-            }} />
+            
         </Stack>
     </>)
 }

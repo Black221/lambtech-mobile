@@ -1,12 +1,20 @@
-import {
-	DarkTheme,
-	DefaultTheme,
-	ThemeProvider,
-} from "@react-navigation/native";
+
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { View, useColorScheme, Text } from "react-native";
+import { useColorScheme, Text } from "react-native";
+import '@tamagui/core/reset.css'
+import { TamaguiProvider, View, createTamagui, Theme } from '@tamagui/core'
+import { config } from '@tamagui/config/v3'
+import LoadingPage from "@/components/LoadingPage";
+
+// you usually export this from a tamagui.config.ts file
+const tamaguiConfig = createTamagui(config)
+
+type Conf = typeof tamaguiConfig
+declare module '@tamagui/core' { // or 'tamagui'
+  interface TamaguiCustomConfig extends Conf {}
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,40 +31,43 @@ export default function RootLayout() {
 	}, [loaded]);
 
 	if (!loaded)
-		return (
-			<>
-				<View>
-					<Text>Loding</Text>
-				</View>
-			</>
-		);
+		return (<>
+			<LoadingPage />
+		</>);
 
 	return (
 		<>
-			<ThemeProvider value={DefaultTheme}>
-				<Stack>
-					<Stack.Screen
-						name="(landing)"
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="(chat)"
-						options={{ headerShown: true }}
-					/>
-					<Stack.Screen
-						name="(maps)"
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="(profile)"
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="(auth)"
-						options={{ headerShown: false }}
-					/>
-				</Stack>
-			</ThemeProvider>
+			<TamaguiProvider config={tamaguiConfig}>
+				<Theme name="light">
+					<Stack>
+						<Stack.Screen
+							name="index"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(landing)"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(chat)"
+							options={{ headerShown: true }}
+						/>
+						<Stack.Screen
+							name="(maps)"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(profile)"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(auth)"
+							options={{ headerShown: false }}
+						/>
+						
+					</Stack>
+				</Theme>
+			</TamaguiProvider>
 		</>
 	);
 }

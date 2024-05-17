@@ -2,9 +2,8 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme, Text } from "react-native";
 import '@tamagui/core/reset.css'
-import { TamaguiProvider, View, createTamagui, Theme } from '@tamagui/core'
+import { TamaguiProvider, createTamagui, Theme } from '@tamagui/core'
 import { config } from '@tamagui/config/v3'
 import LoadingPage from "@/components/LoadingPage";
 
@@ -19,10 +18,12 @@ declare module '@tamagui/core' { // or 'tamagui'
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-	const colorScheme = useColorScheme();
 	const [loaded] = useFonts({
-		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-	});
+		Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+		InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+		CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf')
+	})
+
 
 	useEffect(() => {
 		if (loaded) {

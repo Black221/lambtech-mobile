@@ -5,7 +5,7 @@ export default function Layout () {
 
     return (<>
         <Stack>
-            <Stack.Screen name="stepOne" options={{
+            <Stack.Screen name="index" options={{
                 headerShown: false
             }} />
             <Stack.Screen name="stepTwo" options={{

@@ -2,7 +2,7 @@ import Logo from "@/components/Logo";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
 
-export default function StepOne() {
+export default function Index() {
 	return (
 		<>
 			<View style={style.container}>
@@ -12,7 +12,7 @@ export default function StepOne() {
 				<View style={{ padding: 0 }}>
 					<Image
 						style={{ width: 370, height: 300 }}
-						source={require("../../assets/images/vector.png")}
+						source={require("../assets/images/vector.png")}
 					/>
 				</View>
 				<View
@@ -39,7 +39,7 @@ export default function StepOne() {
 					</Text>
 				</View>
 				<Link
-					href={"room"}
+					href={"login"}
 					style={{
 						padding: 10,
 						width: "100%",

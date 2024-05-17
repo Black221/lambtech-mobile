@@ -6,7 +6,7 @@ export default function Register() {
     
     return (<>
         <View style={style.container}>
-
+            <Text>Hellp</Text>
         </View>
     </>)
 }

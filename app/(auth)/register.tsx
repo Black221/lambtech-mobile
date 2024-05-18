@@ -8,9 +8,43 @@ import { Check as CheckIcon } from "@tamagui/lucide-icons";
 import type { CheckboxProps, SizeTokens } from "tamagui";
 import { Checkbox, Label, XStack, YStack } from "tamagui";
 import React, { useState } from "react";
+import axios from "axios";
+import { environment } from "@/environment";
+import Btn from "@/components/Btn";
 
 export default function Register() {
 	const [isChecked, setIsChecked] = useState(false);
+	const [fullname, setFullname] = useState("");
+	const [phone, setPhone] = useState("");
+	const [code, setCode] = useState("");
+
+	const [isLoading, setLoading] = useState(false);
+
+	const registerFn = async () => {
+		try {
+			setLoading(true);
+			const phoneNumber = "+221" + phone;
+			const [firstname, lastname] = fullname.split(" ");
+
+			const response = await axios.post(
+				`${environment.API_URL}/user/register`,
+				{
+					firstname,
+					lastname,
+					phone: phoneNumber,
+					password: code,
+				}
+			);
+			console.log(response.data);
+
+			router.replace("authenticate");
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
 		<>
 			<View style={style.container}>
@@ -44,16 +78,19 @@ export default function Register() {
 					}}
 				>
 					<Input
-						getValue={(value: string) => console.log(value)}
+						getValue={(value: string) => setFullname(value)}
 						placeholder="Nom Complet"
 					/>
 					<Input
-						getValue={(value: string) => console.log(value)}
-						placeholder="+221 77*********"
+						getValue={(value: string) => setPhone(value)}
+						placeholder="Numero de telephone"
+						keyboardType="numeric"
 					/>
 					<Input
-						getValue={(value: string) => console.log(value)}
+						getValue={(value: string) => setCode(value)}
 						placeholder="Code secret"
+						keyboardType="numeric"
+						maxLength={4}
 					/>
 					<YStack alignItems="center">
 						<CheckboxWithLabel
@@ -64,10 +101,14 @@ export default function Register() {
 				</View>
 				<View>
 					<Button
-						label="S'inscrire"
-						action={() => {
-							router.replace("home");
-						}}
+						label={isLoading ? "En cours..." : "S'inscrire"}
+						action={registerFn}
+					/>
+
+					<Btn
+						label={isLoading ? "Veuillez patienter" : "S'inscrire"}
+						disabled={isLoading}
+						action={registerFn}
 					/>
 				</View>
 			</View>

@@ -39,6 +39,7 @@ export default function Index() {
 					</Text>
 				</View>
 				<Link
+					// href={"login"}
 					href={"register"}
 					style={{
 						padding: 10,

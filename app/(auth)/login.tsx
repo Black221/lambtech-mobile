@@ -18,16 +18,16 @@ export default function Login() {
 	const [response, error, loading, axiosFetch] = useAxios();
 
 	async function loginFn() {
-		console.log(phone, code);
+		const data = JSON.stringify({
+			phone: phone,
+			password: code
+		})
 		axiosFetch({
 			axiosInstance: axiosInstance,
 			method: "POST",
 			url: environment.API_URL + "/user/login",
 			requestConfig: [
-				{
-					phone: phone,
-					password: code,
-				},
+				data
 			],
 		});
 	}

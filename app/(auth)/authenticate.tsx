@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { View, YStack, Text, Button } from "tamagui";
+import { View, YStack, Text, Button, XStack } from "tamagui";
 import InputCode from "@/components/InputCode";
-import Btn from "@/components/Btn";
-import axios from "axios";
-import { environment } from "@/environment";
+import { Alert } from "react-native";
+import FeatherIcon from "@expo/vector-icons/Feather";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Authenticate = () => {
+	const navigation = useNavigation();
 	const onSubmit = (code: string) => {
 		console.log(code);
 		setCode(code);
@@ -14,10 +16,9 @@ const Authenticate = () => {
 
 	const [code, setCode] = useState("");
 	const [activeBtn, setActiveBtn] = useState(false);
-	const [isLoading, setLoading] = useState(false);
+
 	const [canResend, setCanResend] = useState(false);
 	const [timer, setTimer] = useState(30);
-
 	useEffect(() => {
 		if (timer > 0) {
 			setTimeout(() => {
@@ -41,57 +42,73 @@ const Authenticate = () => {
 		setActiveBtn(false);
 	};
 
-	const loginFn = async () => {
-		try {
-			setLoading(true);
-			const response = await axios.post(
-				`${environment.API_URL}/user/login`,
-				{
-					phone: "1234567890",
-					otp: code,
-				}
-			);
-			console.log(response.data);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
+	function resendCode() {
+		if (!canResend) return;
+		else {
+			setCanResend(false);
+			setTimer(30);
 		}
-	};
+	}
 
 	return (
-		<YStack h={"100%"} paddingVertical={"$4"} paddingHorizontal={"$2"}>
-			<YStack justifyContent="center" alignItems="center">
-				<Text fontSize={28}>Entrer le code de</Text>
-				<Text fontSize={28}>validation</Text>
-				<Text>
-					Entrez les 4 chiffres que nous avons envoyés via le ssl
-				</Text>
-				{/* <Text>Numéro de téléphone {route.params.phone}</Text> */}
-			</YStack>
+		<YStack
+			h={"100%"}
+			paddingVertical={"$10"}
+			paddingHorizontal={"$4"}
+			gap={"$8"}
+		>
+			<XStack alignItems="center" gap={"$4"}>
+				<FeatherIcon
+					name="arrow-left"
+					size={32}
+					onPress={navigation.goBack}
+				/>
+				<Text fontSize={32}>Vérification</Text>
+			</XStack>
 
-			<InputCode onSubmit={onSubmit} reset={resetCode} />
+			<XStack>
+				<Text fontSize={20} textAlign="center">
+					Veuillez saisir le code à 4 chiffres envoyé par message
+				</Text>
+			</XStack>
+
+			<InputCode
+				onSubmit={onSubmit}
+				reset={resetCode}
+				onChange={setCode}
+			/>
 
 			<View>
-				{canResend ? (
-					<Button>
-						<Text fontSize={18} color={"black"}>
-							Renvoyer le code
-						</Text>
-					</Button>
-				) : (
-					<Text textAlign="center" fontSize={14} color={"black"}>
-						Renvoyer le code dans {timer} secondes
-					</Text>
-				)}
-				<Btn
-					label="Valider"
+				<Button
+					backgroundColor={activeBtn ? "#16C59B" : "lightgray"}
+					color={activeBtn ? "white" : "gray"}
+					fontSize={18}
+					fontWeight={"bold"}
 					disabled={!activeBtn}
-					action={() => {
-						console.log("code: ", code);
-						// navigation.navigate("TabScreen")
+					onPress={() => {
+						Alert.alert("Clicked", "Something's been clicked");
 					}}
-				/>
+				>
+					Continuer
+				</Button>
+
+				<View py={"$3"}>
+					{canResend ? (
+						<TouchableOpacity onPress={resendCode}>
+							<Text
+								fontSize={14}
+								color={"black"}
+								textAlign="center"
+							>
+								Renvoyer le code
+							</Text>
+						</TouchableOpacity>
+					) : (
+						<Text textAlign="center" fontSize={14} color={"black"}>
+							Renvoyer le code dans {timer} secondes
+						</Text>
+					)}
+				</View>
 			</View>
 		</YStack>
 	);

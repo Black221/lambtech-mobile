@@ -170,7 +170,9 @@ export default function MapPage() {
     return(
         <View style={styles.container}>
             <XStack gap="$3" position="absolute" top="$5" width={"100%"} padding={"$3"} alignItems="center" zIndex={100}>
-                <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
+                <View onPress={() => {
+                        router.push('profile')
+                }} width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
                     <FontAwesome name="user" size={32} color="#16C59B" />
                 </View>
                 <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
@@ -179,7 +181,7 @@ export default function MapPage() {
 
                 <XStack paddingHorizontal={"$4"} flex={1} height={50} borderRadius={50} display="flex" alignItems="center"   bg={"rgba(60,60,60,0.6)"}>
                     <FontAwesome name="map" size={24} color="#16C59B" />
-                    <Text flex={1} textAlign="center" fontSize={24} color="white">Map </Text>
+                    <Text flex={1} textAlign="center" fontSize={20} color="white"> Sacré Coeur 3 </Text>
                 </XStack>
             </XStack>
             <XStack position="absolute" justifyContent="space-between" bottom={"$0"} bg={"white"} width={"100%"} padding={"$3"} alignItems="center" zIndex={100} borderTopLeftRadius={20} borderTopRightRadius={30} borderWidth={1} borderColor={"#16C59B"} borderBottomColor={"white"}>
@@ -199,7 +201,7 @@ export default function MapPage() {
                 </YStack>
                 <YStack>
                     <TouchableOpacity onPress={() => {
-                        router.replace('room')
+                        router.push('specificChat')
                     }}>
                         <FontAwesome name="comment" size={24} color={"gray"} />
                     </TouchableOpacity>

@@ -17,7 +17,7 @@ export default function ChatScreen() {
 	const { userInfos } = useMainState();
 
 	const room = "generale";
-	socket.emit("suscribe", { room });
+	socket.emit("subscribe", { room });
 
 	interface MessageData {
 		text: string;
@@ -57,6 +57,7 @@ export default function ChatScreen() {
 	}, []);
 
 	useEffect(() => {
+
 		socket.on("message", (data) => {
 			setMessages(prev => [
 				...prev, data

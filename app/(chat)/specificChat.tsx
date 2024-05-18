@@ -59,11 +59,15 @@ export default function ChatScreen() {
 	useEffect(() => {
 
 		socket.on("message", (data) => {
-			setMessages([...messages, data])
+			const d = [...messages, data]
+			setMessages(d)
 		});
 
 		return () => {
-			socket.off("message");
+			socket.off("message", (data) => {
+				const d = [...messages, data]
+				setMessages(d)
+			});
 		};
 	}, []);
 

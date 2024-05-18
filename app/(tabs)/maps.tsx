@@ -3,6 +3,7 @@ import { StyleSheet,Platform } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import * as Location from 'expo-location';
 import { useEffect,useState } from "react";
+//@ts-ignore
 import {decode} from "@mapbox/polyline"; //please install this package before running!
 import useAxios from "@/hooks/useAxios";
 import graphhopper from "@/api/graphhopper"

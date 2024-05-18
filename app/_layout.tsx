@@ -53,10 +53,10 @@ export default function RootLayout() {
 							/>
 							<Stack.Screen
 								name="(chat)"
-								options={{ headerShown: true }}
+								options={{ headerShown: false }}
 							/>
 							<Stack.Screen
-								name="(maps)"
+								name="(tabs)"
 								options={{ headerShown: false }}
 							/>
 							<Stack.Screen

@@ -2,7 +2,6 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
 import { environment } from "@/environment";
-import axios from "axios";
 import { Link, router } from "expo-router";
 import { View, Text, StyleSheet, ToastAndroid } from "react-native";
 import { useState } from "react";
@@ -16,6 +15,7 @@ export default function Login() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	async function loginFn() {
+
 		try {
 			console.log({
 				datasource: {
@@ -31,6 +31,7 @@ export default function Login() {
 					password: code,
 				}
 			);
+
 
 			console.log(response);
 			const userInfos = {

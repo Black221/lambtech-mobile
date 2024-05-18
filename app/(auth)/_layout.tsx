@@ -17,7 +17,7 @@ export default function Layout() {
 					}}
 				/>
 				<Stack.Screen
-					name="otp"
+					name="login"
 					options={{
 						headerShown: false,
 					}}

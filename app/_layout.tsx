@@ -40,36 +40,34 @@ export default function RootLayout() {
 	return (
 		<>
 			<TamaguiProvider config={tamaguiConfig}>
-				<MainProvider>
-					<Theme name="light">
-						<Stack>
-							<Stack.Screen
-								name="index"
-								options={{ headerShown: false }}
-							/>
-							<Stack.Screen
-								name="(landing)"
-								options={{ headerShown: false }}
-							/>
-							<Stack.Screen
-								name="(chat)"
-								options={{ headerShown: true }}
-							/>
-							<Stack.Screen
-								name="(maps)"
-								options={{ headerShown: false }}
-							/>
-							<Stack.Screen
-								name="(profile)"
-								options={{ headerShown: false }}
-							/>
-							<Stack.Screen
-								name="(auth)"
-								options={{ headerShown: false }}
-							/>
-						</Stack>
-					</Theme>
-				</MainProvider>
+				<Theme name="light">
+					<Stack>
+						<Stack.Screen
+							name="index"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(landing)"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(chat)"
+							options={{ headerShown: true }}
+						/>
+						<Stack.Screen
+							name="(maps)"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(profile)"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="(auth)"
+							options={{ headerShown: false }}
+						/>
+					</Stack>
+				</Theme>
 			</TamaguiProvider>
 		</>
 	);

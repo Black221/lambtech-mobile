@@ -38,7 +38,7 @@ export default function Login() {
             </View>
             <View>
                 <Button label="Se connecter" action={() => {
-                    router.replace("home")
+                    router.replace("profile")
                 }} />
                 <Link style={{
                     color: "#16C59B",

@@ -1,18 +1,20 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
-import { Link, router } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import { router } from "expo-router";
+import { View, Text, StyleSheet, ToastAndroid } from "react-native";
 
 import { Check as CheckIcon } from "@tamagui/lucide-icons";
 import type { CheckboxProps, SizeTokens } from "tamagui";
 import { Checkbox, Label, XStack, YStack } from "tamagui";
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { environment } from "@/environment";
-import Btn from "@/components/Btn";
+import useMainState from "@/hooks/useMainState";
 
 export default function Register() {
+	const { setPhone: persistUserPhone } = useMainState();
+
 	const [isChecked, setIsChecked] = useState(false);
 	const [fullname, setFullname] = useState("");
 	const [phone, setPhone] = useState("");
@@ -35,11 +37,12 @@ export default function Register() {
 					password: code,
 				}
 			);
-			console.log(response.data);
 
+			persistUserPhone(phoneNumber);
 			router.replace("authenticate");
 		} catch (error) {
 			console.error(error);
+			ToastAndroid.show("Une erreur s'est produite", ToastAndroid.SHORT);
 		} finally {
 			setLoading(false);
 		}
@@ -104,12 +107,6 @@ export default function Register() {
 						label={isLoading ? "En cours..." : "S'inscrire"}
 						action={registerFn}
 					/>
-
-					<Btn
-						label={isLoading ? "Veuillez patienter" : "S'inscrire"}
-						disabled={isLoading}
-						action={registerFn}
-					/>
 				</View>
 			</View>
 		</>
@@ -127,7 +124,7 @@ export function CheckboxWithLabel({
 				id={id}
 				size={size}
 				{...checkboxProps}
-				style={{ backgroundColor: "#16C59B" }}
+				style={{ borderColor: "#16C59B" }}
 			>
 				<Checkbox.Indicator>
 					<CheckIcon />

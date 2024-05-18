@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { View, YStack, Text, Button, XStack } from "tamagui";
 import InputCode from "@/components/InputCode";
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 import FeatherIcon from "@expo/vector-icons/Feather";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import useMainState from "@/hooks/useMainState";
+import { environment } from "@/environment";
+import axios from "axios";
+import { router } from "expo-router";
 
 const Authenticate = () => {
+	const { phone: persistedPhone } = useMainState();
+
 	const navigation = useNavigation();
 	const onSubmit = (code: string) => {
 		console.log(code);
@@ -50,6 +56,24 @@ const Authenticate = () => {
 		}
 	}
 
+	async function verifyCode() {
+		if (code.length !== 4) return;
+		try {
+			const response = await axios.post(
+				environment.API_URL + "/user/verifyOtp",
+				{
+					phone: persistedPhone,
+					otp: code,
+				}
+			);
+
+			router.replace("home");
+		} catch (err) {
+			console.error(err);
+			ToastAndroid.show("Une erreur s'est produite", ToastAndroid.SHORT);
+		}
+	}
+
 	return (
 		<YStack
 			h={"100%"}
@@ -85,9 +109,7 @@ const Authenticate = () => {
 					fontSize={18}
 					fontWeight={"bold"}
 					disabled={!activeBtn}
-					onPress={() => {
-						Alert.alert("Clicked", "Something's been clicked");
-					}}
+					onPress={verifyCode}
 				>
 					Continuer
 				</Button>

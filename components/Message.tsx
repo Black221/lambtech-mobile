@@ -26,7 +26,7 @@ export default function Message({
 				]}
 			>
 				{!isUser && (
-					<Text style={[styles.userName, { color: userColor }]}>
+					<Text style={[styles.userName, { color: getRandomColor() }]}>
 						{userName}
 					</Text>
 				)}

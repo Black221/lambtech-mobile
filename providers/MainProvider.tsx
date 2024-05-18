@@ -7,8 +7,13 @@ type UserInfos = {
 	lastname: string;
 	phone: string;
 	userId: string;
+	
 };
 
+interface Region {
+    latitude: number;
+    longitude: number;
+}
 export const MainContext = createContext<{
 	search: string;
 	setSearch: (search: string) => void;
@@ -24,6 +29,8 @@ export const MainContext = createContext<{
 	setToken: (token: string) => void;
 	userInfos: UserInfos | null;
 	setUserInfos: (userInfos: any) => void;
+	marker: Region;
+	setMarker: (marker: Region) => void;
 }>({
 	search: "",
 	setSearch: () => {
@@ -53,6 +60,7 @@ export const MainContext = createContext<{
 	setUserInfos: () => {
 		return;
 	},
+	marker: {latitude: 14.68109355, longitude: -17.467042379727296}, setMarker: (value: Region) => {return;}
 });
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
@@ -64,6 +72,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 
 	const [isAuth, setIsAuth] = useState<boolean>(false);
 	const [auth, setAuth] = useState<any>(null);
+
+	const [marker, setMarker] = useState<Region>({latitude: 14.68109355, longitude: -17.467042379727296});
 
 	return (
 		<MainContext.Provider
@@ -82,6 +92,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 				setToken,
 				userInfos,
 				setUserInfos,
+				marker, setMarker,
 			}}
 		>
 			{children}

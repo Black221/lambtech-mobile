@@ -67,6 +67,10 @@ export default function RootLayout() {
 								name="(auth)"
 								options={{ headerShown: false }}
 							/>
+							<Stack.Screen
+								name="(search)"
+								options={{ headerShown: true, headerTitle: "Trouver un lieu" }}
+							/>
 						</Stack>
 					</Theme>
 				</MainProvider>

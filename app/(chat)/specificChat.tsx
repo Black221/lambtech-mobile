@@ -50,6 +50,7 @@ export default function ChatScreen() {
 					environment.API_URL + `/conversation/rooms/${room}/messages`
 				);
 				setMessages(dbMessages);
+				console.log(dbMessages)
 			} catch (error) {
 				console.error("Error fetching messages:", error);
 			}
@@ -58,16 +59,16 @@ export default function ChatScreen() {
 
 	useEffect(() => {
 
-		socket.on("message", (data) => {
-			const d = [...messages, data]
-			setMessages(d)
-		});
+		const onMessage = (message: MessageData) => {
+			setMessages(prev => [
+				...prev, message
+			])
+		}
+
+		socket.on("message",onMessage);
 
 		return () => {
-			socket.off("message", (data) => {
-				const d = [...messages, data]
-				setMessages(d)
-			});
+			socket.off("message", onMessage);
 		};
 	}, []);
 

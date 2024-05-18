@@ -10,7 +10,8 @@ import graphhopper from "@/api/graphhopper"
 import { XStack, View, Text, YStack } from "tamagui";
 import { FontAwesome, FontAwesome6,Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { MiddleBottomTabBarIcon } from './../../components/BottomTabComponents';
+import useMainState from "@/hooks/useMainState";
+import useDebounce from "@/hooks/useDebounce";
 
 interface Location {
     coords: {
@@ -111,8 +112,7 @@ export default function MapPage() {
     const [response, error, loading, fetch] = useAxios();
     const [coords, setCoords] = useState([]);
 
-    const [selected, setSelected] = useState<"first" | "second">("first")
-
+    const debounce = useDebounce(firstMarker);
 
     useEffect(() => {
 
@@ -140,7 +140,7 @@ export default function MapPage() {
                 body,
             ]
         });
-    }, [firstMarker]);
+    }, [debounce]);
 
     useEffect(() => {
         if (response) {
@@ -156,16 +156,31 @@ export default function MapPage() {
         }
     }, [response]);
 
-    useEffect(() => {
-        console.log(error);
-    }, [error]);
-
     const convertTime = (seconds: number):string => {
         const hours = (seconds % 60).toPrecision(1);
         return hours;
     }
 
-    const [showChatRoom, setShowChatRoom] = useState(true);
+    const { marker } = useMainState();
+
+
+    useEffect(() => {
+        
+        if (marker) {
+            setRegion({
+                latitude: marker?.latitude,
+                longitude: marker?.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            })
+            setFirstMarker({
+                latitude: marker?.latitude,
+                longitude: marker?.longitude,
+            })
+        }
+        
+    }, [marker]);
+
 
     return(
         <View style={styles.container}>
@@ -175,7 +190,9 @@ export default function MapPage() {
                 }} width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
                     <FontAwesome name="user" size={32} color="#16C59B" />
                 </View>
-                <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
+                <View onPress={() => {
+                    router.push('search')
+                }} width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
                     <FontAwesome name="search" size={28} color="#16C59B" />
                 </View>
 
@@ -223,8 +240,9 @@ export default function MapPage() {
             <MapView style={styles.map} 
                 initialRegion={region}
                 provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE}
-                loadingEnabled={true}
                 showsUserLocation={true}
+                zoomTapEnabled={false}
+                zoomControlEnabled={false}
                 onPress={(e) => {
                     setFirstMarker({
                         latitude: e.nativeEvent.coordinate.latitude,
@@ -262,9 +280,7 @@ export default function MapPage() {
                     title={"Destination"}
                 />
 
-                
-
-                {coords.length > 0 && <Polyline coordinates={coords} />}
+                {coords.length > 0 && <Polyline strokeWidth={4} coordinates={coords} />}
             </MapView>
         </View>
     )

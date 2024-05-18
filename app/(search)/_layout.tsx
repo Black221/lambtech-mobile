@@ -4,10 +4,7 @@ export default function Layout() {
 	return (
 		<>
 			<Stack>
-				<Stack.Screen
-					name="specificChat"
-					options={{ headerShown: false }}
-				/>
+				<Stack.Screen name="search" options={{ headerShown: false }} />
 			</Stack>
 		</>
 	);

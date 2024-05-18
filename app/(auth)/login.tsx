@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import useMainState from "@/hooks/useMainState";
 
 export default function Login() {
-	const { setToken } = useMainState();
+	const { setToken, setUserInfos } = useMainState();
 
 	const [phone, setPhone] = useState("");
 	const [code, setCode] = useState("");
@@ -19,8 +19,7 @@ export default function Login() {
 	const [response, error, loading, axiosFetch] = useAxios();
 
 	async function loginFn() {
-		console.log(phone, code);
-		axiosFetch({
+		await axiosFetch({
 			axiosInstance: axiosInstance,
 			method: "POST",
 			url: environment.API_URL + "/user/login",
@@ -35,14 +34,23 @@ export default function Login() {
 
 	useEffect(() => {
 		if (response) {
+			console.log(response);
+			const userInfos = {
+				token: response.token,
+				firstname: response.firstname,
+				lastname: response.lastname,
+				phone: response.phone,
+				userId: response.userId,
+			};
 			setToken(response.token);
-			router.replace("home");
+			setUserInfos(userInfos);
+			router.replace("maps");
 		}
 	}, [response]);
 
 	useEffect(() => {
 		if (error) {
-			console.error(error);
+			console.table(error);
 			ToastAndroid.show(error, ToastAndroid.SHORT);
 		}
 	}, [error]);

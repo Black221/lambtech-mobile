@@ -1,22 +1,25 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, MutableRefObject } from "react";
 import { YStack, View, Text, Input } from "tamagui";
 
 const InputCode = ({
 	onSubmit = (s: string) => {},
 	reset = () => {},
 	onChange = (s: string) => {},
+	numberOfCases = 4,
 }: {
 	onSubmit: (s: string) => void;
 	reset: () => void;
 	onChange: (s: string) => void;
+	numberOfCases?: number;
 }) => {
-	const [code, setCode] = useState(["", "", "", ""]);
-	const firstRef = useRef(null);
-	const secondRef = useRef(null);
-	const thirdRef = useRef(null);
-	const fourthRef = useRef(null);
+	const [code, setCode] = useState(
+		Array.from({ length: numberOfCases }, () => "")
+	);
 
-	const refs = [firstRef, secondRef, thirdRef, fourthRef];
+	const refs: MutableRefObject<null>[] = [];
+	for (let i = 0; i < numberOfCases; i++) {
+		refs.push(useRef(null));
+	}
 
 	const switchInput = (index: number) => {
 		if (index < refs.length) {
@@ -29,7 +32,7 @@ const InputCode = ({
 
 	useEffect(() => {
 		const joinedCode = code.join("");
-		if (joinedCode.length === 4) {
+		if (joinedCode.length === 6) {
 			onSubmit(joinedCode);
 		} else {
 			reset();
@@ -40,7 +43,7 @@ const InputCode = ({
 	return (
 		<View
 			flexDirection="row"
-			gap="$4"
+			gap="$2"
 			justifyContent="center"
 			alignItems="center"
 		>
@@ -48,8 +51,8 @@ const InputCode = ({
 				<Input
 					key={index}
 					fontSize="$6"
-					width="$6"
-					height="$6"
+					width="$5"
+					height="$5"
 					borderRadius="$2"
 					textAlign="center"
 					maxLength={1}

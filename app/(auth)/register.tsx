@@ -27,6 +27,7 @@ export default function Register() {
 			setLoading(true);
 			const phoneNumber = "+221" + phone;
 			const [firstname, lastname] = fullname.split(" ");
+			persistUserPhone(phoneNumber);
 
 			const response = await axios.post(
 				`${environment.API_URL}/user/register`,
@@ -38,7 +39,6 @@ export default function Register() {
 				}
 			);
 
-			persistUserPhone(phoneNumber);
 			router.replace("authenticate");
 		} catch (error) {
 			console.error(error);

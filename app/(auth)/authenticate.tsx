@@ -13,7 +13,6 @@ import { router } from "expo-router";
 const Authenticate = () => {
 	const { phone: persistedPhone } = useMainState();
 
-	const navigation = useNavigation();
 	const onSubmit = (code: string) => {
 		console.log(code);
 		setCode(code);
@@ -36,7 +35,7 @@ const Authenticate = () => {
 	}, [timer]);
 
 	useEffect(() => {
-		if (code.length === 4) {
+		if (code.length === 6) {
 			setActiveBtn(true);
 		} else {
 			setActiveBtn(false);
@@ -57,8 +56,9 @@ const Authenticate = () => {
 	}
 
 	async function verifyCode() {
-		if (code.length !== 4) return;
+		if (code.length !== 6) return;
 		try {
+			console.log({ phone: persistedPhone, otp: code });
 			const response = await axios.post(
 				environment.API_URL + "/user/verifyOtp",
 				{
@@ -67,7 +67,7 @@ const Authenticate = () => {
 				}
 			);
 
-			router.replace("home");
+			router.replace("maps");
 		} catch (err) {
 			console.error(err);
 			ToastAndroid.show("Une erreur s'est produite", ToastAndroid.SHORT);
@@ -85,14 +85,14 @@ const Authenticate = () => {
 				<FeatherIcon
 					name="arrow-left"
 					size={32}
-					onPress={navigation.goBack}
+					onPress={router.back}
 				/>
 				<Text fontSize={32}>Vérification</Text>
 			</XStack>
 
 			<XStack>
 				<Text fontSize={20} textAlign="center">
-					Veuillez saisir le code à 4 chiffres envoyé par message
+					Veuillez saisir le code à 6 chiffres envoyé par message
 				</Text>
 			</XStack>
 
@@ -100,6 +100,7 @@ const Authenticate = () => {
 				onSubmit={onSubmit}
 				reset={resetCode}
 				onChange={setCode}
+				numberOfCases={6}
 			/>
 
 			<View>

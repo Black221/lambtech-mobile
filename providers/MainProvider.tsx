@@ -30,7 +30,7 @@ export const MainContext = createContext<{
 		return;
 	},
 	phone: "",
-	setPhone: () => {
+	setPhone: (phone: string) => {
 		return;
 	},
 });

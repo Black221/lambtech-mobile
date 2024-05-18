@@ -18,10 +18,10 @@ export default function Login() {
 	const [response, error, loading, axiosFetch] = useAxios();
 
 	async function loginFn() {
-		const data = JSON.stringify({
+		const data = {
 			phone: phone,
 			password: code
-		})
+		}
 		axiosFetch({
 			axiosInstance: axiosInstance,
 			method: "POST",

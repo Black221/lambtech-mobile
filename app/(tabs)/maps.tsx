@@ -53,14 +53,11 @@ const DATA = {
 }
 export default function MapPage() {
 
-    const [location, setLocation] = useState<Location>({ coords: {
-        latitude: 14.68,
-        longitude: -17.44,
-    }});
+    const [location, setLocation] = useState<any>();
     const [camera, setCamera] = useState<Camera>({
         center: {
-            latitude: location?.["coords"]?.latitude,
-            longitude: location?.["coords"]?.longitude,
+            latitude: location?.["coords"]?.latitude || 14.68,
+            longitude: location?.["coords"]?.longitude || -17.44,
         },
         pitch: 0,
         heading: 80,
@@ -68,8 +65,8 @@ export default function MapPage() {
         zoom: 16
     })
     const [region, setRegion] = useState<Region>({
-        latitude: location?.["coords"]?.latitude,
-        longitude: location?.["coords"]?.longitude,
+        latitude: location?.["coords"]?.latitude || 14.68,
+        longitude: location?.["coords"]?.longitude || -17.44,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
@@ -82,12 +79,18 @@ export default function MapPage() {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied');
-            return;
+                return;
             }
     
             let location = await Location.getCurrentPositionAsync({});
             // console.log(location)
             setLocation(location);
+            setRegion({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            })
             //method to simulate car movement
         })();
     }, []);
@@ -220,8 +223,10 @@ export default function MapPage() {
                 camera={camera}
             >
                 <Marker
-                    coordinate={ {latitude: location?.["coords"]?.latitude,
-                    longitude: location?.["coords"]?.longitude}}
+                    coordinate={{
+                        latitude: location?.["coords"]?.latitude || -14.44,
+                        longitude: location?.["coords"]?.longitude || -17.44,
+                    }}
                     title={"Ma position"}
                 />
 

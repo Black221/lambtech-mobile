@@ -35,7 +35,7 @@ export default function Login() {
 	useEffect(() => {
 		if (response) {
 			setToken(response.token);
-			router.replace("home");
+			router.replace("maps");
 		}
 	}, [response]);
 

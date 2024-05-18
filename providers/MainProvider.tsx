@@ -12,6 +12,8 @@ export const MainContext = createContext<{
 	setAuth: (auth: any) => void;
 	phone: string;
 	setPhone: (phone: string) => void;
+	token: string | null;
+	setToken: (token: string) => void;
 }>({
 	search: "",
 	setSearch: () => {
@@ -33,12 +35,17 @@ export const MainContext = createContext<{
 	setPhone: (phone: string) => {
 		return;
 	},
+	token: null,
+	setToken: (token: string) => {
+		return;
+	},
 });
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
 	const [search, setSearch] = useState<string>("");
 	const [sidebar, setSidebar] = useState<string>("");
 	const [phone, setPhone] = useState<string>("");
+	const [token, setToken] = useState<string | null>(null);
 
 	const [isAuth, setIsAuth] = useState<boolean>(false);
 	const [auth, setAuth] = useState<any>(null);
@@ -56,6 +63,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 				setAuth,
 				phone,
 				setPhone,
+				token,
+				setToken,
 			}}
 		>
 			{children}

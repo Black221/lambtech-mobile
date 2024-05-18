@@ -1,116 +1,82 @@
-import { useState, useRef, useEffect } from 'react';
-import { YStack, View, Text, Input } from 'tamagui';
+import { useState, useRef, useEffect } from "react";
+import { YStack, View, Text, Input } from "tamagui";
 
+const InputCode = ({
+	onSubmit = (s: string) => {},
+	reset = () => {},
+	onChange = (s: string) => {},
+}: {
+	onSubmit: (s: string) => void;
+	reset: () => void;
+	onChange: (s: string) => void;
+}) => {
+	const [code, setCode] = useState(["", "", "", ""]);
+	const firstRef = useRef(null);
+	const secondRef = useRef(null);
+	const thirdRef = useRef(null);
+	const fourthRef = useRef(null);
 
-const InputCode = ({ onSubmit= (s: string ) => {}, reset = () => {} }: { onSubmit : (s :string) => void, reset : () => void}) => {
+	const refs = [firstRef, secondRef, thirdRef, fourthRef];
 
-    const [code, setCode] = useState(['', '', '', '']);
-    const firstRef = useRef(null);
-    const secondRef = useRef(null);
-    const thirdRef = useRef(null);
-    const fourthRef = useRef(null);
+	const switchInput = (index: number) => {
+		if (index < refs.length) {
+			const nextRef = refs[index];
+			if (nextRef?.current) {
+				(nextRef.current as HTMLElement).focus();
+			}
+		}
+	};
 
-    const switchInput = (text: string, index: number) => {
-        if (text.length > 0 && firstRef.current && secondRef.current && thirdRef.current && fourthRef.current) {
-            if (index === 1) {
-                // @ts-ignore
-                secondRef.current.focus();
+	useEffect(() => {
+		const joinedCode = code.join("");
+		if (joinedCode.length === 4) {
+			onSubmit(joinedCode);
+		} else {
+			reset();
+		}
+		onChange(joinedCode);
+	}, [code, onSubmit, reset, onChange]);
 
-            } else if (index === 2) {
-                // @ts-ignore
-                thirdRef.current.focus();
-            } else if (index === 3) {
-                // @ts-ignore
-                fourthRef.current.focus();
-            }
-        }
-    }
-    
-    useEffect(() => {
-        if (code.join('').length === 4) {
-            onSubmit(code.join(''));
-        } else {
-            reset();
-        }
-    }, [code])
-
-    return (
-        <View flexDirection='row' space="$3" justifyContent='center' alignItems='center'>
-            <Input
-                fontSize={"$6"}
-                width={"$7"}
-                height={"$7"}
-                borderRadius={"$12"}
-                textAlign='center'
-                maxLength={1}
-                keyboardType="numeric"
-                autoFocus={true}
-                ref={firstRef}
-                focusStyle={{
-                    borderColor: "#6764FF",
-                    borderWidth: 2
-                }}
-                onChange={(e: any) => {
-                    setCode(c => [e.nativeEvent.text, c[1], c[2], c[3]]);
-                    switchInput(e.nativeEvent.text, 1);
-                }}
-            />
-            <Input
-                fontSize={"$6"}
-                width={"$7"}
-                height={"$7"}
-                borderRadius={"$12"}
-                textAlign='center'
-                maxLength={1}
-                keyboardType="numeric"
-                ref={secondRef}
-                focusStyle={{
-                    borderColor: "#6764FF",
-                    borderWidth: 2
-                }}
-                onChange={(e: any) =>{
-                    setCode(c => [c[0], e.nativeEvent.text, c[2], c[3]]);
-                    switchInput(e.nativeEvent.text, 2);
-                }}
-            />
-            <Input
-                fontSize={"$6"}
-                width={"$7"}
-                height={"$7"}
-                borderRadius={"$12"}
-                textAlign='center'
-                maxLength={1}
-                keyboardType="numeric"
-                ref={thirdRef}
-                focusStyle={{
-                    borderColor: "#6764FF",
-                    borderWidth: 2
-                }}
-                onChange={(e: any) => {
-                    setCode(c => [c[0], c[1], e.nativeEvent.text, c[3]]);
-                    switchInput(e.nativeEvent.text, 3);
-                }}
-            />
-            <Input
-                fontSize={"$6"}
-                width={"$7"}
-                height={"$7"}
-                borderRadius={"$12"}
-                textAlign='center'
-                maxLength={1}
-                keyboardType="numeric"
-                ref={fourthRef}
-                focusStyle={{
-                    borderColor: "#6764FF",
-                    borderWidth: 2
-                }}
-                onChange={(e: any) => {
-                    setCode(c => [c[0], c[1], c[2], e.nativeEvent.text]);
-                    switchInput(e.nativeEvent.text, 4);
-                }}
-            />
-        </View>
-    )
-}
+	return (
+		<View
+			flexDirection="row"
+			gap="$4"
+			justifyContent="center"
+			alignItems="center"
+		>
+			{refs.map((ref, index) => (
+				<Input
+					key={index}
+					fontSize="$6"
+					width="$6"
+					height="$6"
+					borderRadius="$2"
+					textAlign="center"
+					maxLength={1}
+					keyboardType="numeric"
+					autoFocus={index === 0}
+					ref={ref}
+					focusStyle={{
+						borderColor: "#16C59B",
+						borderWidth: 2,
+					}}
+					onChange={(e: any) => {
+						const newText = e.nativeEvent.text;
+						setCode((prevCode) => {
+							const newCode = [...prevCode];
+							newCode[index] = newText;
+							return newCode;
+						});
+						if (newText) {
+							switchInput(index + 1);
+						} else {
+							switchInput(index - 1);
+						}
+					}}
+				/>
+			))}
+		</View>
+	);
+};
 
 export default InputCode;

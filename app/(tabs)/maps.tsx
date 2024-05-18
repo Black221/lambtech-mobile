@@ -9,7 +9,7 @@ import useAxios from "@/hooks/useAxios";
 import graphhopper from "@/api/graphhopper"
 import { XStack, View, Text, YStack } from "tamagui";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-
+import { router } from "expo-router";
 
 interface Location {
     coords: {
@@ -173,14 +173,14 @@ export default function MapPage() {
         <View style={styles.container}>
             <XStack gap="$3" position="absolute" top="$5" width={"100%"} padding={"$3"} alignItems="center" zIndex={100}>
                 <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
-                    <FontAwesome name="user" size={32} color="white" />
+                    <FontAwesome name="user" size={32} color="#16C59B" />
                 </View>
                 <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
-                    <FontAwesome name="search" size={28} color="white" />
+                    <FontAwesome name="search" size={28} color="#16C59B" />
                 </View>
 
                 <XStack paddingHorizontal={"$4"} flex={1} height={50} borderRadius={50} display="flex" alignItems="center"   bg={"rgba(60,60,60,0.6)"}>
-                    <FontAwesome name="map" size={24} color="white" />
+                    <FontAwesome name="map" size={24} color="#16C59B" />
                     <Text flex={1} textAlign="center" fontSize={24} color="white">Map </Text>
                 </XStack>
             </XStack>
@@ -202,7 +202,7 @@ export default function MapPage() {
                 </YStack>
             </XStack>
             <MapView style={styles.map} 
-                initialRegion={region}
+                initialRegion={location}
                 provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE}
                 loadingEnabled={true}
                 showsUserLocation={true}

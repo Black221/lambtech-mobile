@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, ReactNode, useState } from "react";
 
+type UserInfos = {
+	token: string;
+	firstname: string;
+	lastname: string;
+	phone: string;
+	userId: string;
+};
+
 export const MainContext = createContext<{
 	search: string;
 	setSearch: (search: string) => void;
@@ -14,6 +22,8 @@ export const MainContext = createContext<{
 	setPhone: (phone: string) => void;
 	token: string | null;
 	setToken: (token: string) => void;
+	userInfos: UserInfos | null;
+	setUserInfos: (userInfos: any) => void;
 }>({
 	search: "",
 	setSearch: () => {
@@ -39,6 +49,10 @@ export const MainContext = createContext<{
 	setToken: (token: string) => {
 		return;
 	},
+	userInfos: null,
+	setUserInfos: () => {
+		return;
+	},
 });
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
@@ -46,6 +60,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 	const [sidebar, setSidebar] = useState<string>("");
 	const [phone, setPhone] = useState<string>("");
 	const [token, setToken] = useState<string | null>(null);
+	const [userInfos, setUserInfos] = useState<UserInfos | null>(null);
 
 	const [isAuth, setIsAuth] = useState<boolean>(false);
 	const [auth, setAuth] = useState<any>(null);
@@ -65,6 +80,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 				setPhone,
 				token,
 				setToken,
+				userInfos,
+				setUserInfos,
 			}}
 		>
 			{children}

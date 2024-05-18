@@ -4,47 +4,55 @@ import Logo from "@/components/Logo";
 import { environment } from "@/environment";
 import { Link, router } from "expo-router";
 import { View, Text, StyleSheet, ToastAndroid } from "react-native";
-import axiosInstance from "@/api/axios";
-import useAxios from "@/hooks/useAxios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useMainState from "@/hooks/useMainState";
 
 export default function Login() {
-	const { setToken } = useMainState();
+	const { setToken, setUserInfos } = useMainState();
 
 	const [phone, setPhone] = useState("");
 	const [code, setCode] = useState("");
-
-	const [response, error, loading, axiosFetch] = useAxios();
+	const [isLoading, setIsLoading] = useState(false);
 
 	async function loginFn() {
-		const data = {
-			phone: phone,
-			password: code
-		}
-		axiosFetch({
-			axiosInstance: axiosInstance,
-			method: "POST",
-			url: environment.API_URL + "/user/login",
-			requestConfig: [
-				data
-			],
-		});
-	}
 
-	useEffect(() => {
-		if (response) {
+		try {
+			console.log({
+				datasource: {
+					phone: phone,
+					password: code,
+				},
+			});
+			setIsLoading(true);
+			const { data: response } = await axios.post(
+				environment.API_URL + "/user/login",
+				{
+					phone: phone,
+					password: code,
+				}
+			);
+
+
+			console.log(response);
+			const userInfos = {
+				token: response.token,
+				firstname: response?.firstname,
+				lastname: response?.lastname,
+				phone: response.phone,
+				role: response.role,
+				userId: response.userId,
+			};
+			console.info(userInfos);
 			setToken(response.token);
+			setUserInfos(userInfos);
 			router.replace("maps");
+		} catch (err) {
+			console.error(err);
+			ToastAndroid.show("Identifiants invalides", ToastAndroid.SHORT);
+		} finally {
+			setIsLoading(false);
 		}
-	}, [response]);
-
-	useEffect(() => {
-		if (error) {
-			console.error(error);
-			ToastAndroid.show(error, ToastAndroid.SHORT);
-		}
-	}, [error]);
+	}
 
 	return (
 		<>
@@ -82,11 +90,13 @@ export default function Login() {
 						getValue={(value: string) => setPhone("+221" + value)}
 						placeholder="Téléphone"
 						keyboardType="numeric"
+						debounceValue={0}
 					/>
 					<Input
 						getValue={(value: string) => setCode(value)}
 						placeholder="Code"
 						keyboardType="numeric"
+						debounceValue={0}
 					/>
 					<Text
 						style={{
@@ -100,7 +110,7 @@ export default function Login() {
 				</View>
 				<View>
 					<Button
-						label={loading ? "En cours..." : "Se connecter"}
+						label={isLoading ? "En cours..." : "Se connecter"}
 						action={loginFn}
 					/>
 					<Link

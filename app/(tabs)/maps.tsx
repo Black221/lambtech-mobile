@@ -35,6 +35,21 @@ interface Region {
     longitudeDelta: number;
 }
 
+const DATA = {
+    start: {
+        name: "Sam Geultape",
+        latitude: 14.68,
+        longitude: -17.44,
+    },
+    middle: [
+
+    ],
+    end: {
+        name: "IIBS Sacre Coeur 3",
+        latitude: 14.68,
+        longitude: -17.44,
+    }
+}
 export default function MapPage() {
 
     const [location, setLocation] = useState<Location>({ coords: {
@@ -165,16 +180,23 @@ export default function MapPage() {
                     <Text flex={1} textAlign="center" fontSize={24} color="white">Map </Text>
                 </XStack>
             </XStack>
-            <YStack position="absolute" bottom={"$0"} bg={"white"} width={"100%"} padding={"$3"} alignItems="center" zIndex={100} borderTopLeftRadius={20} borderTopRightRadius={30} borderWidth={1} borderColor={"#16C59B"} borderBottomColor={"white"}>
-                <XStack gap="$3" alignItems="center">
-                    <FontAwesome6 name="car" size={24} color="#16C59B" />
-                    <Text fontSize={24} color="#16C59B">Distance: {response?.paths[0].distance}</Text>
-                </XStack>
-                <XStack gap="$3" alignItems="center">
-                    <FontAwesome6 name="car" size={24} color="#16C59B" />
-                    <Text fontSize={24} color="#16C59B">Duration: {response?.paths[0].time}</Text>
-                </XStack>
-            </YStack>
+            <XStack position="absolute" bottom={"$0"} bg={"white"} width={"100%"} padding={"$3"} alignItems="center" zIndex={100} borderTopLeftRadius={20} borderTopRightRadius={30} borderWidth={1} borderColor={"#16C59B"} borderBottomColor={"white"}>
+                <YStack>
+                    <XStack>
+                        {/* <FontAwesome name="pins" size={24} color={"#16C59B"} /> */}
+                    </XStack>
+                </YStack>
+                <YStack>
+                    <XStack gap="$3" alignItems="center">
+                        <FontAwesome6 name="car" size={24} color="#16C59B" />
+                        <Text fontSize={24} color="#16C59B">Distance: {response?.paths[0].distance}</Text>
+                    </XStack>
+                    <XStack gap="$3" alignItems="center">
+                        <FontAwesome6 name="car" size={24} color="#16C59B" />
+                        <Text fontSize={24} color="#16C59B">Duration: {response?.paths[0].time}</Text>
+                    </XStack>
+                </YStack>
+            </XStack>
             <MapView style={styles.map} 
                 initialRegion={region}
                 provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE}

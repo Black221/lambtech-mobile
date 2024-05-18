@@ -17,21 +17,37 @@ export default function Message({
 						source={{ uri: userPhoto }}
 						style={styles.userPhoto}
 					/>
-					<View style={styles.separator} />
 				</View>
 			)}
 			<View
 				style={[
 					styles.messageContainer,
-					{ backgroundColor: isUser ? "#0f93e6" : userColor },
+					{ backgroundColor: isUser ? "#0f93e6" : "#f0f0f0" },
 				]}
 			>
-				{!isUser && <Text style={styles.userName}>{userName}</Text>}
-				<Text style={styles.messageText}>{message}</Text>
-				<Text style={styles.timestamp}>{timestamp}</Text>
+				{!isUser && (
+					<Text style={[styles.userName, { color: userColor }]}>
+						{userName}
+					</Text>
+				)}
+				<Text style={[styles.messageText, isUser && { color: "#fff" }]}>
+					{message}
+				</Text>
+				<Text style={[styles.timestamp, isUser && { color: "#fff" }]}>
+					{timestamp}
+				</Text>
 			</View>
 		</View>
 	);
+}
+
+function getRandomColor() {
+	const letters = "0123456789ABCDEF";
+	let color = "#";
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
 }
 
 const styles = StyleSheet.create({
@@ -60,11 +76,11 @@ const styles = StyleSheet.create({
 	},
 	messageText: {
 		fontSize: 16,
-		color: "#fff",
+		color: "#000",
 	},
 	timestamp: {
-		fontSize: 12,
-		color: "#fff",
+		fontSize: 10,
+		color: "#000",
 		alignSelf: "flex-end",
 		marginTop: 5,
 	},

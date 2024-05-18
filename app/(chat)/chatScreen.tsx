@@ -110,7 +110,7 @@ export default function ChatScreen() {
 						justifyContent="center"
 					>
 						<Text fontSize={"$7"} fontWeight={"600"}>
-							John Doe
+							Sahm - IIBS
 						</Text>
 						<XStack alignItems="center" space={"$1.5"}>
 							<View
@@ -119,21 +119,10 @@ export default function ChatScreen() {
 								borderRadius={100}
 								bg={"green"}
 							/>
-							<Text fontSize={"$2"}>Online</Text>
+							<Text fontSize={"$2"}>3/4</Text>
 						</XStack>
 					</YStack>
-					<View width={"$6"}>
-						<Image
-							source={{
-								uri: "https://randomuser.me/api/portraits/men/75.jpg",
-							}}
-							style={{
-								width: 50,
-								height: 50,
-								borderRadius: 100,
-							}}
-						/>
-					</View>
+					<View width={"$6"}></View>
 				</XStack>
 				<YStack flex={1} padding={10}>
 					<ScrollView showsVerticalScrollIndicator={false}>

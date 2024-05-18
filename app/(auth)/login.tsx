@@ -7,6 +7,7 @@ import { Link, router } from "expo-router";
 import { View, Text, StyleSheet, ToastAndroid } from "react-native";
 import { useState } from "react";
 import useMainState from "@/hooks/useMainState";
+import axios from "axios";
 
 export default function Login() {
 	const { setToken, setUserInfos } = useMainState();
@@ -16,7 +17,6 @@ export default function Login() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	async function loginFn() {
-
 		try {
 			console.log({
 				datasource: {
@@ -32,7 +32,6 @@ export default function Login() {
 					password: code,
 				}
 			);
-
 
 			console.log(response);
 			const userInfos = {

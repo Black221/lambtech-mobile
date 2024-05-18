@@ -1,10 +1,51 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
+import { environment } from "@/environment";
 import { Link, router } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ToastAndroid } from "react-native";
+import axiosInstance from "@/api/axios";
+import useAxios from "@/hooks/useAxios";
+import { useEffect, useState } from "react";
+import useMainState from "@/hooks/useMainState";
 
 export default function Login() {
+	const { setToken } = useMainState();
+
+	const [phone, setPhone] = useState("");
+	const [code, setCode] = useState("");
+
+	const [response, error, loading, axiosFetch] = useAxios();
+
+	async function loginFn() {
+		console.log(phone, code);
+		axiosFetch({
+			axiosInstance: axiosInstance,
+			method: "POST",
+			url: environment.API_URL + "/user/login",
+			requestConfig: [
+				{
+					phone: phone,
+					password: code,
+				},
+			],
+		});
+	}
+
+	useEffect(() => {
+		if (response) {
+			setToken(response.token);
+			router.replace("maps");
+		}
+	}, [response]);
+
+	useEffect(() => {
+		if (error) {
+			console.error(error);
+			ToastAndroid.show(error, ToastAndroid.SHORT);
+		}
+	}, [error]);
+
 	return (
 		<>
 			<View style={style.container}>
@@ -38,12 +79,14 @@ export default function Login() {
 					}}
 				>
 					<Input
-						getValue={(value: string) => console.log(value)}
+						getValue={(value: string) => setPhone("+221" + value)}
 						placeholder="Téléphone"
+						keyboardType="numeric"
 					/>
 					<Input
-						getValue={(value: string) => console.log(value)}
+						getValue={(value: string) => setCode(value)}
 						placeholder="Code"
+						keyboardType="numeric"
 					/>
 					<Text
 						style={{
@@ -57,10 +100,8 @@ export default function Login() {
 				</View>
 				<View>
 					<Button
-						label="Se connecter"
-						action={() => {
-							router.replace("chat");
-						}}
+						label={loading ? "En cours..." : "Se connecter"}
+						action={loginFn}
 					/>
 					<Link
 						style={{

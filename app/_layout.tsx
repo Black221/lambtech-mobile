@@ -5,6 +5,7 @@ import "@tamagui/core/reset.css";
 import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
 import { config } from "@tamagui/config/v3";
 import LoadingPage from "@/components/LoadingPage";
+import { MainProvider } from "@/providers/MainProvider";
 
 // you usually export this from a tamagui.config.ts file
 const tamaguiConfig = createTamagui(config);
@@ -39,34 +40,36 @@ export default function RootLayout() {
 	return (
 		<>
 			<TamaguiProvider config={tamaguiConfig}>
-				<Theme name="light">
-					<Stack>
-						<Stack.Screen
-							name="index"
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen
-							name="(landing)"
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen
-							name="(chat)"
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen
-							name="(maps)"
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen
-							name="(profile)"
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen
-							name="(auth)"
-							options={{ headerShown: false }}
-						/>
-					</Stack>
-				</Theme>
+				<MainProvider>
+					<Theme name="light">
+						<Stack>
+							<Stack.Screen
+								name="index"
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name="(landing)"
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name="(chat)"
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name="(tabs)"
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name="(profile)"
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name="(auth)"
+								options={{ headerShown: false }}
+							/>
+						</Stack>
+					</Theme>
+				</MainProvider>
 			</TamaguiProvider>
 		</>
 	);

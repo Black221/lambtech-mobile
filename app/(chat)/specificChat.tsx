@@ -1,11 +1,12 @@
 import FooterChat from "@/components/FooterChat";
 import { SafeAreaView } from "react-native-safe-area-context";
+// @ts-ignore
 import Icon from "react-native-vector-icons/Ionicons";
 import { View, Text, XStack, YStack, Input } from "tamagui";
 import Message from "@/components/Message";
 import { ScrollView, Image, TouchableOpacity } from "react-native";
 import { Link, router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useMainState from "@/hooks/useMainState";
 import { socket } from "@/api/socket";
 import axios from "axios";
@@ -43,6 +44,7 @@ export default function ChatScreen() {
 		setInputText("");
 	};
 
+	const ref = useRef<any>();
 	useEffect(() => {
 		(async () => {
 			try {
@@ -108,7 +110,10 @@ export default function ChatScreen() {
 					<View width={"$6"}></View>
 				</XStack>
 				<YStack flex={1} padding={10}>
-					<ScrollView showsVerticalScrollIndicator={false}>
+					<ScrollView
+						ref={ref}
+						onContentSizeChange={() => ref.current.scrollToEnd({ animated: true })}
+					 	showsVerticalScrollIndicator={false}>
 						{messages.map((msg: MessageData, index: number) => (
 							<Message
 								key={index}

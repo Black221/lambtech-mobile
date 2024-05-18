@@ -7,14 +7,16 @@ export default function Input({
 	getValue,
 	placeholder,
 	keyboardType = "default",
+	debounceValue = 500,
 	...rest
 }: {
 	getValue: (value: string) => void;
 	placeholder: string;
+	debounceValue?: number;
 	keyboardType?: KeyboardType;
 } & TextInputProps) {
 	const [value, setValue] = useState<string>("");
-	const debouncedValue = useDebounce(value, 500);
+	const debouncedValue = useDebounce(value, debounceValue);
 
 	// Use useEffect to call getValue only when debouncedValue changes
 	useEffect(() => {

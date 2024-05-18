@@ -6,93 +6,52 @@ import Message from "@/components/Message";
 import { ScrollView, Image, TouchableOpacity } from "react-native";
 import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
+import useMainState from "@/hooks/useMainState";
+import { socket } from "@/api/socket";
 
 export default function ChatScreen() {
-
-	const [messages, setMessages] = useState([
-		{
-			message: "Hello, how are you?",
-			isRight: true,
-			isUser: true,
-			timestamp: "10:30 AM",
-			userColor: "blue",
-			userName: "User 1",
-		},
-		{
-			message: "I'm fine, thank you!",
-			isRight: false,
-			isUser: false,
-			timestamp: "10:31 AM",
-			userColor: "red",
-			userName: "User 2",
-			userPhoto: "https://randomuser.me/api/portraits/men/74.jpg",
-		},
-		{
-			message: "What are you doing?",
-			isRight: false,
-			isUser: false,
-			timestamp: "10:32 AM",
-			userColor: "blue",
-			userName: "User 3",
-			userPhoto: "https://randomuser.me/api/portraits/women/74.jpg",
-		},
-		{
-			message: "I'm working on a new project",
-			isRight: false,
-			isUser: false,
-			timestamp: "10:33 AM",
-			userColor: "orange",
-			userName: "User 4",
-			userPhoto: "https://randomuser.me/api/portraits/women/74.jpg",
-		},
-		{
-			message: "me too",
-			isRight: true,
-			isUser: true,
-			timestamp: "10:30 AM",
-			userColor: "blue",
-			userName: "User 1",
-		},
-		{
-			message: "I'm fine, thank you!",
-			isRight: false,
-			isUser: false,
-			timestamp: "10:31 AM",
-			userColor: "red",
-			userName: "User 2",
-			userPhoto: "https://randomuser.me/api/portraits/men/74.jpg",
-		},
-		{
-			message: "What are you doing?",
-			isRight: false,
-			isUser: false,
-			timestamp: "10:32 AM",
-			userColor: "blue",
-			userName: "User 3",
-			userPhoto: "https://randomuser.me/api/portraits/women/74.jpg",
-		},
-	]);
+	const [messages, setMessages] = useState<MessageData[]>([]);
 	const [inputText, setInputText] = useState("");
+	const { userInfos } = useMainState();
+
+	const room = "generale";
+	socket.emit("suscribe", { room });
+
+	interface MessageData {
+		message: string;
+		userId: string | undefined;
+		roomId: string;
+		username: string | undefined;
+		timestamp: string;
+		userPhoto: string;
+	}
 
 	const handleSendPress = () => {
-		setMessages([
-			...messages,
-			{
-				message: inputText,
-				isRight: true,
-				isUser: true,
-				timestamp: new Date().toLocaleTimeString(),
-				userColor: "blue",
-				userName: "User 1",
-				userPhoto: "https://randomuser.me/api/portraits/men/75.jpg",
-			},
-		]);
+		const messageData: MessageData = {
+			message: inputText,
+			userId: userInfos?.userId,
+			roomId: room,
+			username: userInfos?.firstname + " " + userInfos?.lastname,
+			timestamp: new Date().toLocaleTimeString(),
+			userPhoto: "https://placehold.co/48x48",
+		};
+
+		setMessages([...messages, messageData]);
+
+		socket.emit("message", messageData);
+
 		setInputText("");
 	};
 
 	useEffect(() => {
+		socket.on("message", (data) => {
+			setMessages([...messages, data.message]);
+		});
 
-	}, []) 
+		return () => {
+			socket.off("message");
+		};
+	}, []);
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -131,16 +90,16 @@ export default function ChatScreen() {
 				</XStack>
 				<YStack flex={1} padding={10}>
 					<ScrollView showsVerticalScrollIndicator={false}>
-						{messages.map((msg, index) => (
+						{messages.map((msg: MessageData, index: number) => (
 							<Message
 								key={index}
 								message={msg.message}
-								isRight={msg.isRight}
-								isUser={msg.isUser}
+								isRight={msg.userId === userInfos?.userId}
+								isUser={msg.userId === userInfos?.userId}
 								timestamp={msg.timestamp}
-								userName={msg.userName}
+								userName={msg.username}
 								userPhoto={msg.userPhoto}
-								userColor={msg.userColor} // Pass the userColor prop
+								// userColor={msg.userColor} // Pass the userColor prop
 							/>
 						))}
 					</ScrollView>

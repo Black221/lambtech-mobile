@@ -5,9 +5,10 @@ import { View, Text, XStack, YStack, Input } from "tamagui";
 import Message from "@/components/Message";
 import { ScrollView, Image, TouchableOpacity } from "react-native";
 import { Link, router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ChatScreen() {
+
 	const [messages, setMessages] = useState([
 		{
 			message: "Hello, how are you?",
@@ -88,6 +89,10 @@ export default function ChatScreen() {
 		]);
 		setInputText("");
 	};
+
+	useEffect(() => {
+
+	}, []) 
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>

@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { View, YStack, Text, Button, XStack } from "tamagui";
 import InputCode from "@/components/InputCode";
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 import FeatherIcon from "@expo/vector-icons/Feather";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import useMainState from "@/hooks/useMainState";
+import { environment } from "@/environment";
+import axios from "axios";
+import { router } from "expo-router";
 
 const Authenticate = () => {
-	const navigation = useNavigation();
+	const { phone: persistedPhone } = useMainState();
+
 	const onSubmit = (code: string) => {
 		console.log(code);
 		setCode(code);
@@ -30,7 +35,7 @@ const Authenticate = () => {
 	}, [timer]);
 
 	useEffect(() => {
-		if (code.length === 4) {
+		if (code.length === 6) {
 			setActiveBtn(true);
 		} else {
 			setActiveBtn(false);
@@ -50,6 +55,25 @@ const Authenticate = () => {
 		}
 	}
 
+	async function verifyCode() {
+		if (code.length !== 6) return;
+		try {
+			console.log({ phone: persistedPhone, otp: code });
+			const response = await axios.post(
+				environment.API_URL + "/user/verifyOtp",
+				{
+					phone: persistedPhone,
+					otp: code,
+				}
+			);
+
+			router.replace("maps");
+		} catch (err) {
+			console.error(err);
+			ToastAndroid.show("Une erreur s'est produite", ToastAndroid.SHORT);
+		}
+	}
+
 	return (
 		<YStack
 			h={"100%"}
@@ -61,14 +85,14 @@ const Authenticate = () => {
 				<FeatherIcon
 					name="arrow-left"
 					size={32}
-					onPress={navigation.goBack}
+					onPress={router.back}
 				/>
 				<Text fontSize={32}>Vérification</Text>
 			</XStack>
 
 			<XStack>
 				<Text fontSize={20} textAlign="center">
-					Veuillez saisir le code à 4 chiffres envoyé par message
+					Veuillez saisir le code à 6 chiffres envoyé par message
 				</Text>
 			</XStack>
 
@@ -76,6 +100,7 @@ const Authenticate = () => {
 				onSubmit={onSubmit}
 				reset={resetCode}
 				onChange={setCode}
+				numberOfCases={6}
 			/>
 
 			<View>
@@ -85,9 +110,7 @@ const Authenticate = () => {
 					fontSize={18}
 					fontWeight={"bold"}
 					disabled={!activeBtn}
-					onPress={() => {
-						Alert.alert("Clicked", "Something's been clicked");
-					}}
+					onPress={verifyCode}
 				>
 					Continuer
 				</Button>

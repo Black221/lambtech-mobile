@@ -1,42 +1,53 @@
-import useDebounce from "@/hooks/useDebounce"
-import { useState } from "react"
-import { TextInput } from "react-native"
-import { View } from "react-native-animatable"
+import useDebounce from "@/hooks/useDebounce";
+import { useState, useEffect } from "react";
+import { TextInput, KeyboardType, TextInputProps } from "react-native";
+import { View } from "react-native-animatable";
 
+export default function Input({
+	getValue,
+	placeholder,
+	keyboardType = "default",
+	...rest
+}: {
+	getValue: (value: string) => void;
+	placeholder: string;
+	keyboardType?: KeyboardType;
+} & TextInputProps) {
+	const [value, setValue] = useState<string>("");
+	const debouncedValue = useDebounce(value, 500);
 
-export default function Input ({ getValue, placeholder } : {
-    getValue: (value: string) => void,
-    placeholder: string
-}) {
+	// Use useEffect to call getValue only when debouncedValue changes
+	useEffect(() => {
+		getValue(debouncedValue);
+	}, [debouncedValue]);
 
-    const [value, setValue] = useState<string>("")
-    const debouncedValue = useDebounce(value, 500)
-
-
-    return(<>
-        <View style={{
-            flexDirection: "row",
-            width: "90%",
-            height: 50,
-            borderWidth: 1,
-            borderColor: "#16C59B",
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: "center",
-            marginVertical: 6,
-        }}>
-            <TextInput style={{
-                width: "100%",
-                height: "100%",
-                textAlign: "left",
-                paddingHorizontal: 10,
-            
-            }} onChange={ (e) => {
-                setValue(e.nativeEvent.text)
-                getValue(debouncedValue)
-            }} placeholder={placeholder}>
-                {value}
-            </TextInput>
-        </View>
-    </>)
+	return (
+		<View
+			style={{
+				flexDirection: "row",
+				width: "90%",
+				height: 50,
+				borderWidth: 1,
+				borderColor: "#16C59B",
+				borderRadius: 10,
+				justifyContent: "center",
+				alignItems: "center",
+				marginVertical: 6,
+			}}
+		>
+			<TextInput
+				keyboardType={keyboardType}
+				style={{
+					width: "100%",
+					height: "100%",
+					textAlign: "left",
+					paddingHorizontal: 10,
+				}}
+				onChange={(e) => setValue(e.nativeEvent.text)}
+				placeholder={placeholder}
+				value={value}
+				{...rest}
+			/>
+		</View>
+	);
 }

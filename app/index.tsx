@@ -39,11 +39,7 @@ export default function Index() {
 					</Text>
 				</View>
 				<Link
-<<<<<<< HEAD
-					href={"maps"}
-=======
-					href={"register"}
->>>>>>> 50cbabbb948d24c2031d60d9341c2247102af3e1
+					href={"login"}
 					style={{
 						padding: 10,
 						width: "100%",

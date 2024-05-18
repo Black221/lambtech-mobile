@@ -1,16 +1,53 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
-import { Link, router } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import { router } from "expo-router";
+import { View, Text, StyleSheet, ToastAndroid } from "react-native";
 
 import { Check as CheckIcon } from "@tamagui/lucide-icons";
 import type { CheckboxProps, SizeTokens } from "tamagui";
 import { Checkbox, Label, XStack, YStack } from "tamagui";
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { environment } from "@/environment";
+import useMainState from "@/hooks/useMainState";
 
 export default function Register() {
+	const { setPhone: persistUserPhone } = useMainState();
+
 	const [isChecked, setIsChecked] = useState(false);
+	const [fullname, setFullname] = useState("");
+	const [phone, setPhone] = useState("");
+	const [code, setCode] = useState("");
+
+	const [isLoading, setLoading] = useState(false);
+
+	const registerFn = async () => {
+		try {
+			setLoading(true);
+			const phoneNumber = "+221" + phone;
+			const [firstname, lastname] = fullname.split(" ");
+			persistUserPhone(phoneNumber);
+
+			const response = await axios.post(
+				`${environment.API_URL}/user/register`,
+				{
+					firstname,
+					lastname,
+					phone: phoneNumber,
+					password: code,
+				}
+			);
+
+			router.replace("authenticate");
+		} catch (error) {
+			console.error(error);
+			ToastAndroid.show("Une erreur s'est produite", ToastAndroid.SHORT);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
 		<>
 			<View style={style.container}>
@@ -44,16 +81,19 @@ export default function Register() {
 					}}
 				>
 					<Input
-						getValue={(value: string) => console.log(value)}
+						getValue={(value: string) => setFullname(value)}
 						placeholder="Nom Complet"
 					/>
 					<Input
-						getValue={(value: string) => console.log(value)}
-						placeholder="+221 77*********"
+						getValue={(value: string) => setPhone(value)}
+						placeholder="Numero de telephone"
+						keyboardType="numeric"
 					/>
 					<Input
-						getValue={(value: string) => console.log(value)}
+						getValue={(value: string) => setCode(value)}
 						placeholder="Code secret"
+						keyboardType="numeric"
+						maxLength={4}
 					/>
 					<YStack alignItems="center">
 						<CheckboxWithLabel
@@ -64,10 +104,8 @@ export default function Register() {
 				</View>
 				<View>
 					<Button
-						label="S'inscrire"
-						action={() => {
-							router.replace("home");
-						}}
+						label={isLoading ? "En cours..." : "S'inscrire"}
+						action={registerFn}
 					/>
 				</View>
 			</View>
@@ -86,7 +124,7 @@ export function CheckboxWithLabel({
 				id={id}
 				size={size}
 				{...checkboxProps}
-				style={{ backgroundColor: "#16C59B" }}
+				style={{ borderColor: "#16C59B" }}
 			>
 				<Checkbox.Indicator>
 					<CheckIcon />

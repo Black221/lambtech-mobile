@@ -1,5 +1,5 @@
 
-import { StyleSheet,Platform } from "react-native";
+import { StyleSheet,Platform, TouchableOpacity } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import * as Location from 'expo-location';
 import { useEffect,useState } from "react";
@@ -8,8 +8,9 @@ import {decode} from "@mapbox/polyline"; //please install this package before ru
 import useAxios from "@/hooks/useAxios";
 import graphhopper from "@/api/graphhopper"
 import { XStack, View, Text, YStack } from "tamagui";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6,Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { MiddleBottomTabBarIcon } from './../../components/BottomTabComponents';
 
 interface Location {
     coords: {
@@ -38,7 +39,7 @@ interface Region {
 
 const DATA = {
     start: {
-        name: "Sam Geultape",
+        name: "IIBS Sacre Coeur 3",
         latitude: 14.68,
         longitude: -17.44,
     },
@@ -46,7 +47,7 @@ const DATA = {
 
     ],
     end: {
-        name: "IIBS Sacre Coeur 3",
+        name: "Sam Geultape",
         latitude: 14.68,
         longitude: -17.44,
     }
@@ -54,16 +55,7 @@ const DATA = {
 export default function MapPage() {
 
     const [location, setLocation] = useState<any>();
-    const [camera, setCamera] = useState<Camera>({
-        center: {
-            latitude: location?.["coords"]?.latitude || 14.68,
-            longitude: location?.["coords"]?.longitude || -17.44,
-        },
-        pitch: 0,
-        heading: 80,
-        altitude: 600,
-        zoom: 16
-    })
+   
     const [region, setRegion] = useState<Region>({
         latitude: location?.["coords"]?.latitude || 14.68,
         longitude: location?.["coords"]?.longitude || -17.44,
@@ -86,8 +78,8 @@ export default function MapPage() {
             // console.log(location)
             setLocation(location);
             setRegion({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
+                latitude: location?.coords?.latitude,
+                longitude: location?.coords?.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             })
@@ -128,12 +120,12 @@ export default function MapPage() {
             profile: "car",
             points: [
                 [
-                    firstMarker.longitude,
-                    firstMarker.latitude
+                    location?.coords?.longitude,
+                    location?.coords?.latitude
                 ],
                 [
-                    secondMarker.longitude,
-                    secondMarker.latitude
+                    firstMarker?.longitude,
+                    firstMarker?.latitude
                 ]
             ],
             point_hints: ["Lindenschmitstraße", "Thalkirchener Str."],
@@ -148,7 +140,7 @@ export default function MapPage() {
                 body,
             ]
         });
-    }, [secondMarker, firstMarker]);
+    }, [firstMarker]);
 
     useEffect(() => {
         if (response) {
@@ -160,7 +152,6 @@ export default function MapPage() {
                     longitude: point[1]
                 }
             });
-            console.log(response.paths[0].instructions)
             setCoords(coords);
         }
     }, [response]);
@@ -169,10 +160,19 @@ export default function MapPage() {
         console.log(error);
     }, [error]);
 
+    const convertTime = (seconds: number):string => {
+        const hours = (seconds % 60).toPrecision(1);
+        return hours;
+    }
+
+    const [showChatRoom, setShowChatRoom] = useState(true);
+
     return(
         <View style={styles.container}>
             <XStack gap="$3" position="absolute" top="$5" width={"100%"} padding={"$3"} alignItems="center" zIndex={100}>
-                <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
+                <View onPress={() => {
+                        router.push('profile')
+                }} width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
                     <FontAwesome name="user" size={32} color="#16C59B" />
                 </View>
                 <View width={50} height={50} borderRadius={50} display="flex" alignItems="center" justifyContent="center"  bg={"rgba(60,60,60,0.6)"}>
@@ -181,46 +181,70 @@ export default function MapPage() {
 
                 <XStack paddingHorizontal={"$4"} flex={1} height={50} borderRadius={50} display="flex" alignItems="center"   bg={"rgba(60,60,60,0.6)"}>
                     <FontAwesome name="map" size={24} color="#16C59B" />
-                    <Text flex={1} textAlign="center" fontSize={24} color="white">Map </Text>
+                    <Text flex={1} textAlign="center" fontSize={20} color="white"> Sacré Coeur 3 </Text>
                 </XStack>
             </XStack>
-            <XStack position="absolute" bottom={"$0"} bg={"white"} width={"100%"} padding={"$3"} alignItems="center" zIndex={100} borderTopLeftRadius={20} borderTopRightRadius={30} borderWidth={1} borderColor={"#16C59B"} borderBottomColor={"white"}>
-                <YStack>
+            <XStack position="absolute" justifyContent="space-between" bottom={"$0"} bg={"white"} width={"100%"} padding={"$3"} alignItems="center" zIndex={100} borderTopLeftRadius={20} borderTopRightRadius={30} borderWidth={1} borderColor={"#16C59B"} borderBottomColor={"white"}>
+                <YStack >
                     <XStack>
-                        {/* <FontAwesome name="pins" size={24} color={"#16C59B"} /> */}
+                        <Ionicons name="location" size={24} color={"#16C59B"} />
+                        <Text marginLeft={"$2"} textAlign="center" fontSize={12} color="black">
+                            {DATA.start.name}
+                        </Text>
+                    </XStack>
+                    <XStack>
+                        <Ionicons name="location" size={24} color={"#16C59B"} />
+                        <Text marginLeft={"$2"} textAlign="center" fontSize={12} color="black">
+                            {DATA.end.name}
+                        </Text>
                     </XStack>
                 </YStack>
                 <YStack>
+                    <TouchableOpacity onPress={() => {
+                        router.push('specificChat')
+                    }}>
+                        <FontAwesome name="comment" size={24} color={"gray"} />
+                    </TouchableOpacity>
+                </YStack>
+                <YStack>
                     <XStack gap="$3" alignItems="center">
-                        <FontAwesome6 name="car" size={24} color="#16C59B" />
-                        <Text fontSize={24} color="#16C59B">Distance: {response?.paths[0].distance}</Text>
+                        <FontAwesome6 name="car" size={10} color="#16C59B" />
+                        <Text fontSize={10} color="#16C59B">Distance: {(response?.paths[0].distance / 1000).toPrecision(2)} km</Text>
                     </XStack>
                     <XStack gap="$3" alignItems="center">
-                        <FontAwesome6 name="car" size={24} color="#16C59B" />
-                        <Text fontSize={24} color="#16C59B">Duration: {response?.paths[0].time}</Text>
+                        <FontAwesome6 name="car" size={10} color="#16C59B" />
+                        <Text fontSize={10} color="#16C59B">Duration: {convertTime(response?.paths[0].time / 1000)} mn</Text>
                     </XStack>
                 </YStack>
             </XStack>
+
+
+
             <MapView style={styles.map} 
-                initialRegion={location}
+                initialRegion={region}
                 provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE}
                 loadingEnabled={true}
                 showsUserLocation={true}
                 onPress={(e) => {
-                    if (selected === "first") {
-                        setFirstMarker({
-                            latitude: e.nativeEvent.coordinate.latitude,
-                            longitude: e.nativeEvent.coordinate.longitude
-                        });
-                    } else {
-                        setSecondMarker({
-                            latitude: e.nativeEvent.coordinate.latitude,
-                            longitude: e.nativeEvent.coordinate.longitude
-                        });
-                    }
+                    setFirstMarker({
+                        latitude: e.nativeEvent.coordinate.latitude,
+                        longitude: e.nativeEvent.coordinate.longitude
+                    });
                 }}
                 onRegionChange={setRegion}
-                camera={camera}
+                camera={{
+                    center: {
+                       latitude: location?.["coords"]?.latitude || 0,
+                       longitude: location?.["coords"]?.longitude || 0,
+                   },
+                   pitch: 0,
+                   heading: 80,
+                   // Only on iOS MapKit, in meters. The property is ignored by Google Maps.
+                   altitude: 600,
+                   // Only when using Google Maps.
+                   zoom: 16
+                }}
+    
             >
                 <Marker
                     coordinate={{
@@ -231,22 +255,14 @@ export default function MapPage() {
                 />
 
                 <Marker
-                    coordinate={ {latitude: secondMarker.latitude,
-                    longitude: secondMarker.longitude}}
-                    title={"Ma position 2"}
-                    onPress={() => {
-                        setSelected("second");
+                    coordinate={{
+                        latitude: firstMarker.latitude || 0,
+                        longitude: firstMarker.longitude || 0
                     }}
+                    title={"Destination"}
                 />
 
-                <Marker
-                    coordinate={ {latitude: firstMarker.latitude,
-                    longitude: firstMarker.longitude}}
-                    title={"Ma position 3"}
-                    onPress={() => {
-                        setSelected("first");
-                    }}
-                />
+                
 
                 {coords.length > 0 && <Polyline coordinates={coords} />}
             </MapView>

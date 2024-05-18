@@ -15,7 +15,6 @@ export default function Login() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	async function loginFn() {
-
 		try {
 			console.log({
 				datasource: {
@@ -31,7 +30,6 @@ export default function Login() {
 					password: code,
 				}
 			);
-
 
 			console.log(response);
 			const userInfos = {

@@ -38,8 +38,6 @@ export default function ChatScreen() {
 			userPhoto: "https://placehold.co/48x48",
 		};
 
-		setMessages([...messages, messageData]);
-
 		socket.emit("message", messageData);
 
 		setInputText("");

@@ -58,7 +58,7 @@ export default function ChatScreen() {
 
 	useEffect(() => {
 		socket.on("message", (data) => {
-			setMessages((prev) => [...prev, data]);
+			setMessages([...messages, data]);
 		});
 
 		return () => {

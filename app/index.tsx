@@ -39,7 +39,7 @@ export default function Index() {
 					</Text>
 				</View>
 				<Link
-					href={"login"}
+					href={"chat"}
 					style={{
 						padding: 10,
 						width: "100%",

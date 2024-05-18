@@ -8,7 +8,7 @@ export default function Layout () {
             <Stack.Screen name="register" options={{
                 headerShown: true
             }} />
-            <Stack.Screen name="login" options={{
+            <Stack.Screen name="authenticate" options={{
                 headerShown: false
             }} />
             <Stack.Screen name="otp" options={{

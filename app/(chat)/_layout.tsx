@@ -6,6 +6,10 @@ export default function Layout() {
 			<Stack>
 				<Stack.Screen name="room" options={{ headerShown: false }} />
 				<Stack.Screen name="chat" options={{ headerShown: false }} />
+				<Stack.Screen
+					name="chatScreen"
+					options={{ headerShown: false }}
+				/>
 			</Stack>
 		</>
 	);

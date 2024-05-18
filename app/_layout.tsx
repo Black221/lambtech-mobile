@@ -1,27 +1,26 @@
-
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme, Text } from "react-native";
-import '@tamagui/core/reset.css'
-import { TamaguiProvider, View, createTamagui, Theme } from '@tamagui/core'
-import { config } from '@tamagui/config/v3'
+import "@tamagui/core/reset.css";
+import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
+import { config } from "@tamagui/config/v3";
 import LoadingPage from "@/components/LoadingPage";
 
 // you usually export this from a tamagui.config.ts file
-const tamaguiConfig = createTamagui(config)
+const tamaguiConfig = createTamagui(config);
 
-type Conf = typeof tamaguiConfig
-declare module '@tamagui/core' { // or 'tamagui'
-  interface TamaguiCustomConfig extends Conf {}
+type Conf = typeof tamaguiConfig;
+declare module "@tamagui/core" {
+	// or 'tamagui'
+	interface TamaguiCustomConfig extends Conf {}
 }
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-	const colorScheme = useColorScheme();
 	const [loaded] = useFonts({
-		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+		Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
+		InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
 	});
 
 	useEffect(() => {
@@ -31,9 +30,11 @@ export default function RootLayout() {
 	}, [loaded]);
 
 	if (!loaded)
-		return (<>
-			<LoadingPage />
-		</>);
+		return (
+			<>
+				<LoadingPage />
+			</>
+		);
 
 	return (
 		<>
@@ -50,7 +51,7 @@ export default function RootLayout() {
 						/>
 						<Stack.Screen
 							name="(chat)"
-							options={{ headerShown: true }}
+							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
 							name="(maps)"
@@ -64,7 +65,6 @@ export default function RootLayout() {
 							name="(auth)"
 							options={{ headerShown: false }}
 						/>
-						
 					</Stack>
 				</Theme>
 			</TamaguiProvider>

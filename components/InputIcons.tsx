@@ -1,4 +1,4 @@
-import useDebounce from "@/hooks/useDebounce";
+import useDebouncedValue from "@/hooks/useDebounce";
 import { useEffect, useState } from "react";
 import { XStack, Input } from "tamagui";
 
@@ -7,7 +7,7 @@ const InputIcons = (
 	data: string,
 	getData: (value: string) => void
 ) => {
-	const debounced = useDebounce(data, 500);
+	const debounced = useDebouncedValue(data, 500);
 
 	useEffect(() => {
 		getData(debounced);

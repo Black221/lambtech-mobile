@@ -5,17 +5,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MessagesText from "@/components/MessageText";
 import InputIcons from "@/components/InputIcons";
 
-function Chat({ route, navigation }: any) {
+function Chat() {
 	const [value, setValue] = useState("");
 	const [data, setData] = useState<
 		Array<{ id: number; sender: number; text: string; time: string }>
 	>([]);
-
-	useEffect(() => {
-		navigation.setOptions({
-			title: route.params.name,
-		});
-	}, []);
 
 	return (
 		<YStack

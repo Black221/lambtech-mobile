@@ -8,8 +8,9 @@ import {decode} from "@mapbox/polyline"; //please install this package before ru
 import useAxios from "@/hooks/useAxios";
 import graphhopper from "@/api/graphhopper"
 import { XStack, View, Text, YStack } from "tamagui";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6,Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { MiddleBottomTabBarIcon } from './../../components/BottomTabComponents';
 
 interface Location {
     coords: {
@@ -169,6 +170,13 @@ export default function MapPage() {
         console.log(error);
     }, [error]);
 
+    const convertTime = (seconds: number):string => {
+        const hours = (seconds % 60).toPrecision(1);
+        return hours;
+    }
+
+    const [showChatRoom, setShowChatRoom] = useState(false);
+
     return(
         <View style={styles.container}>
             <XStack gap="$3" position="absolute" top="$5" width={"100%"} padding={"$3"} alignItems="center" zIndex={100}>
@@ -185,22 +193,29 @@ export default function MapPage() {
                 </XStack>
             </XStack>
             <XStack position="absolute" bottom={"$0"} bg={"white"} width={"100%"} padding={"$3"} alignItems="center" zIndex={100} borderTopLeftRadius={20} borderTopRightRadius={30} borderWidth={1} borderColor={"#16C59B"} borderBottomColor={"white"}>
-                <YStack>
+                <YStack flex={1}>
                     <XStack>
-                        {/* <FontAwesome name="pins" size={24} color={"#16C59B"} /> */}
+                        <Ionicons name="location" size={24} color={"#16C59B"} />
+                        <Text marginLeft={"$2"} textAlign="center" fontSize={12} color="black">Location</Text>
+                    </XStack>
+                    <XStack>
+                        <Ionicons name="location" size={24} color={"#16C59B"} />
+                        <Text marginLeft={"$2"} textAlign="center" fontSize={12} color="black">Location</Text>
                     </XStack>
                 </YStack>
                 <YStack>
                     <XStack gap="$3" alignItems="center">
-                        <FontAwesome6 name="car" size={24} color="#16C59B" />
-                        <Text fontSize={24} color="#16C59B">Distance: {response?.paths[0].distance}</Text>
+                        <FontAwesome6 name="car" size={10} color="#16C59B" />
+                        <Text fontSize={10} color="#16C59B">Distance: {(response?.paths[0].distance / 1000).toPrecision(2)} km</Text>
                     </XStack>
                     <XStack gap="$3" alignItems="center">
-                        <FontAwesome6 name="car" size={24} color="#16C59B" />
-                        <Text fontSize={24} color="#16C59B">Duration: {response?.paths[0].time}</Text>
+                        <FontAwesome6 name="car" size={10} color="#16C59B" />
+                        <Text fontSize={10} color="#16C59B">Duration: {convertTime(response?.paths[0].time / 1000)} mn</Text>
                     </XStack>
                 </YStack>
             </XStack>
+            {showChatRoom && <XStack position="absolute">
+            </XStack>}
             <MapView style={styles.map} 
                 initialRegion={location}
                 provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE}

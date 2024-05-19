@@ -6,6 +6,7 @@ import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
 import { config } from "@tamagui/config/v3";
 import LoadingPage from "@/components/LoadingPage";
 import { MainProvider } from "@/providers/MainProvider";
+import { I18nextProvider } from "react-i18next";
 
 // you usually export this from a tamagui.config.ts file
 const tamaguiConfig = createTamagui(config);
@@ -40,6 +41,7 @@ export default function RootLayout() {
 	return (
 		<>
 			<TamaguiProvider config={tamaguiConfig}>
+			<I18nextProvider i18n={i18n}>
 				<MainProvider>
 					<Theme name="light">
 						<Stack>
